@@ -1,235 +1,840 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Admin Panel</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>✨ Smart Attendance | Complete Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background:#eef2f7;
-}
+    body {
+      background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+      font-family: 'Inter', sans-serif;
+      padding: 1.8rem 1.5rem;
+      min-height: 100vh;
+    }
 
-h2{
-  text-align:center;
-  padding:15px;
-}
+    .dashboard-container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
 
-.container{
-  width:95%;
-  margin:auto;
-  background:#fff;
-  border-radius:12px;
-  padding:20px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.1);
-}
+    .hero-section {
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
 
-table{
-  width:100%;
-  border-collapse: collapse;
-}
+    .title-area h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1e293b, #3b3b6b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-th{
-  background:#4f46e5;
-  color:white;
-  padding:12px;
-  position:sticky;
-  top:0;
-}
+    .title-area h1 i {
+      background: none;
+      color: #4f46e5;
+    }
 
-td{
-  padding:10px;
-  text-align:center;
-  border-bottom:1px solid #ddd;
-}
+    .stats-badge {
+      background: white;
+      padding: 0.6rem 1.4rem;
+      border-radius: 60px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      font-weight: 600;
+      border: 1px solid #e2e8f0;
+    }
 
-tr:hover{
-  background:#f9fafb;
-}
+    .stats-badge i {
+      color: #4f46e5;
+      margin-right: 8px;
+    }
 
-img{
-  width:60px;
-  height:60px;
-  border-radius:8px;
-  object-fit:cover;
-}
+    .stats-badge span {
+      font-weight: 800;
+      font-size: 1.3rem;
+      margin-left: 6px;
+      color: #0f172a;
+    }
 
-button{
-  padding:6px 10px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  margin:2px;
-}
+    .table-wrapper {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+      border: 1px solid #eef2ff;
+    }
 
-.delete-btn{
-  background:#ef4444;
-  color:white;
-}
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.85rem;
+      min-width: 1100px;
+    }
 
-.update-btn{
-  background:#22c55e;
-  color:white;
-}
+    .data-table th {
+      background: #f8fafc;
+      color: #1e293b;
+      font-weight: 600;
+      padding: 1rem 0.9rem;
+      border-bottom: 2px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:10px;
-}
+    .data-table td {
+      padding: 0.9rem 0.8rem;
+      border-bottom: 1px solid #f0f2f5;
+      vertical-align: middle;
+    }
 
-</style>
+    .data-table tr:hover td {
+      background: #fefce8;
+    }
 
+    .student-photo {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      object-fit: cover;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border: 2px solid white;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .student-photo:hover {
+      transform: scale(1.05);
+    }
+
+    .editable-field {
+      background: transparent;
+      border: 1px dashed #cbd5e1;
+      padding: 6px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+      min-width: 80px;
+    }
+
+    .editable-field:hover {
+      background: #f1f5f9;
+      border-color: #4f46e5;
+    }
+
+    .edit-input {
+      width: 100%;
+      padding: 6px 10px;
+      border-radius: 12px;
+      border: 2px solid #4f46e5;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: white;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-icon {
+      border: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-delete {
+      background: #fff1f0;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    .btn-delete:hover {
+      background: #dc2626;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Modal Styles */
+    .photo-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .photo-modal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .photo-card {
+      background: white;
+      border-radius: 2rem;
+      max-width: 520px;
+      width: 90%;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .photo-card h3 {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #0f172a;
+      font-size: 1.5rem;
+    }
+
+    .photo-options {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 1.8rem 0;
+      flex-wrap: wrap;
+    }
+
+    .photo-option-btn {
+      border: none;
+      padding: 0.9rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .photo-option-btn.camera {
+      background: #4f46e5;
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .photo-option-btn.camera:hover {
+      background: #4338ca;
+      transform: translateY(-2px);
+    }
+
+    .photo-option-btn.upload {
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .photo-option-btn.upload:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .camera-preview-area {
+      margin-top: 1rem;
+    }
+
+    #videoElement {
+      width: 100%;
+      border-radius: 20px;
+      background: #1e293b;
+      margin-top: 10px;
+      transform: scaleX(-1);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 1.2rem;
+    }
+
+    .modal-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .modal-btn-primary {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .modal-btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 80px;
+      font-size: 0.85rem;
+      z-index: 2100;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    .badge-dept, .year-badge {
+      background: #e0e7ff;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      display: inline-block;
+    }
+
+    .year-badge {
+      background: #d9f99d;
+      color: #3f6212;
+    }
+
+    .loading-spinner {
+      text-align: center;
+      padding: 40px;
+      color: #64748b;
+    }
+  </style>
 </head>
-
 <body>
 
-<h2>📊 Smart Attendance Admin Panel</h2>
+<div class="dashboard-container">
+  <div class="hero-section">
+    <div class="title-area">
+      <h1><i class="fas fa-crown"></i> Smart Attendance · Pro Admin</h1>
+      <p style="color:#475569; font-size:0.8rem; margin-top: 6px;">
+        <i class="fas fa-pen-alt"></i> Click any text field to edit • 
+        <i class="fas fa-image"></i> Click photo to update (Upload file OR Capture)
+      </p>
+    </div>
+    <div class="stats-badge">
+      <i class="fas fa-database"></i> TOTAL RECORDS
+      <span id="countDisplay">0</span>
+    </div>
+  </div>
 
-<div class="container">
-
-<div class="header">
-  <div>Total Records: <span id="count">0</span></div>
+  <div class="table-wrapper">
+    <table class="data-table" id="attendanceTable">
+      <thead>
+        <tr>
+          <th>DEPT</th>
+          <th>YEAR</th>
+          <th>NAME</th>
+          <th>ROLL</th>
+          <th>LECTURE</th>
+          <th>PHOTO</th>
+          <th>DATE/TIME</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="8" class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i> Loading records...</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<table id="table">
-<tr>
-<th>Dept</th>
-<th>Year</th>
-<th>Name</th>
-<th>Roll</th>
-<th>Lecture</th>
-<th>Photo</th>
-<th>Date</th>
-<th>Action</th>
-</tr>
-</table>
-
+<!-- Photo Modal -->
+<div id="photoModal" class="photo-modal">
+  <div class="photo-card">
+    <h3><i class="fas fa-camera"></i> Update Student Photo</h3>
+    <p style="color:#64748b; font-size:14px; margin-bottom: 10px;">Choose how you want to update the photo</p>
+    
+    <div id="initialOptions" class="photo-options">
+      <button id="uploadFileBtn" class="photo-option-btn upload">
+        <i class="fas fa-folder-open"></i> Upload from Files
+      </button>
+      <button id="takePhotoBtn" class="photo-option-btn camera">
+        <i class="fas fa-camera-retro"></i> Take a Photo
+      </button>
+    </div>
+    
+    <div id="cameraSection" style="display: none;">
+      <div class="camera-preview-area">
+        <video id="videoElement" autoplay playsinline muted></video>
+        <canvas id="canvasElement" style="display: none;"></canvas>
+        <div class="modal-buttons">
+          <button id="captureBtn" class="modal-btn modal-btn-primary">
+            <i class="fas fa-camera"></i> Capture Photo
+          </button>
+          <button id="backToOptionsBtn" class="modal-btn modal-btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg,image/webp" style="display: none;">
+  </div>
 </div>
 
-<!-- Hidden camera -->
-<video id="video" style="display:none;"></video>
-<canvas id="canvas" style="display:none;"></canvas>
+<div id="toastMessage" class="toast-msg">✨ Action completed</div>
 
 <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "smart-attendence-3167b.firebaseapp.com",
+    projectId: "smart-attendence-3167b",
+    storageBucket: "smart-attendence-3167b.appspot.com",
+    messagingSenderId: "894029161535",
+    appId: "1:894029161535:web:3e0749629d7389dc85048a"
+  };
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "smart-attendence-3167b.firebaseapp.com",
-  projectId: "smart-attendence-3167b",
-  storageBucket: "smart-attendence-3167b.appspot.com",
-  messagingSenderId: "894029161535",
-  appId: "1:894029161535:web:3e0749629d7389dc85048a"
-};
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  // DOM elements
+  const tableBody = document.getElementById("tableBody");
+  const countSpan = document.getElementById("countDisplay");
+  const toastEl = document.getElementById("toastMessage");
+  
+  // Modal elements
+  const photoModal = document.getElementById("photoModal");
+  const initialOptions = document.getElementById("initialOptions");
+  const cameraSection = document.getElementById("cameraSection");
+  const uploadFileBtn = document.getElementById("uploadFileBtn");
+  const takePhotoBtn = document.getElementById("takePhotoBtn");
+  const backToOptionsBtn = document.getElementById("backToOptionsBtn");
+  const captureBtn = document.getElementById("captureBtn");
+  const fileInput = document.getElementById("fileInput");
+  const videoElem = document.getElementById("videoElement");
+  const canvasElem = document.getElementById("canvasElement");
+  
+  let currentDocIdForPhoto = null;
+  let currentStream = null;
 
-const table = document.getElementById("table");
-const count = document.getElementById("count");
+  // Toast function
+  function showToast(message, isError = false) {
+    toastEl.textContent = message;
+    toastEl.style.background = isError ? "#dc2626" : "#1e293b";
+    toastEl.style.opacity = "1";
+    setTimeout(() => {
+      toastEl.style.opacity = "0";
+    }, 2500);
+  }
 
-let total = 0;
-let currentDocId = null;
-let videoStream = null;
+  // Stop camera stream
+  async function stopCamera() {
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => track.stop());
+      currentStream = null;
+    }
+    videoElem.srcObject = null;
+  }
 
-// LOAD DATA
-async function loadData() {
-  const snapshot = await getDocs(collection(db, "attendance"));
+  // Reset modal to initial state
+  function resetModal() {
+    initialOptions.style.display = "flex";
+    cameraSection.style.display = "none";
+    stopCamera();
+  }
 
-  snapshot.forEach((docSnap) => {
-    const d = docSnap.data();
-    const id = docSnap.id;
+  // Close modal
+  function closeModal() {
+    photoModal.classList.remove("active");
+    resetModal();
+    currentDocIdForPhoto = null;
+  }
 
-    total++;
-    count.innerText = total;
+  // Update photo in Firebase
+  async function updatePhoto(docId, photoBase64) {
+    if (!docId || !photoBase64) return false;
+    try {
+      await updateDoc(doc(db, "attendance", docId), { photo: photoBase64 });
+      
+      // Update the photo in table immediately
+      const rows = document.querySelectorAll("#tableBody tr");
+      for (let row of rows) {
+        if (row.getAttribute("data-docid") === docId) {
+          const photoCell = row.cells[5];
+          if (photoCell) {
+            const img = photoCell.querySelector("img");
+            if (img) {
+              img.src = photoBase64;
+            } else {
+              photoCell.innerHTML = `<img src="${photoBase64}" class="student-photo" alt="student">`;
+            }
+          }
+          break;
+        }
+      }
+      showToast("✅ Photo updated successfully!");
+      return true;
+    } catch (err) {
+      showToast("❌ Update failed: " + err.message, true);
+      return false;
+    }
+  }
 
-    const row = table.insertRow();
+  // Open camera and start stream
+  async function startCamera() {
+    try {
+      await stopCamera();
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: "user", width: { ideal: 720 } },
+        audio: false 
+      });
+      currentStream = stream;
+      videoElem.srcObject = stream;
+      await videoElem.play();
+    } catch (err) {
+      console.error("Camera error:", err);
+      showToast("⚠️ Camera access denied or not available", true);
+      throw err;
+    }
+  }
 
-    row.insertCell(0).innerText = d.department;
-    row.insertCell(1).innerText = d.year;
-    row.insertCell(2).innerText = d.name;
-    row.insertCell(3).innerText = d.roll;
-    row.insertCell(4).innerText = d.lecture;
+  // Capture photo from video
+  function capturePhoto() {
+    if (!videoElem.videoWidth || !videoElem.videoHeight) {
+      showToast("Camera not ready, please wait", true);
+      return null;
+    }
+    
+    canvasElem.width = videoElem.videoWidth;
+    canvasElem.height = videoElem.videoHeight;
+    const ctx = canvasElem.getContext("2d");
+    ctx.drawImage(videoElem, 0, 0, canvasElem.width, canvasElem.height);
+    return canvasElem.toDataURL("image/jpeg", 0.85);
+  }
 
-    const imgCell = row.insertCell(5);
-    imgCell.innerHTML = `<img src="${d.photo}">`;
-
-    row.insertCell(6).innerText = new Date(d.date).toLocaleString();
-
-    const actionCell = row.insertCell(7);
-
-    // DELETE
-    const delBtn = document.createElement("button");
-    delBtn.innerText = "Delete";
-    delBtn.classList.add("delete-btn");
-
-    delBtn.onclick = async () => {
-      if(confirm("Delete record?")){
-        await deleteDoc(doc(db,"attendance",id));
-        row.remove();
-        total--;
-        count.innerText = total;
+  // ========== EVENT HANDLERS ==========
+  
+  // Upload file option
+  uploadFileBtn.addEventListener("click", () => {
+    if (!currentDocIdForPhoto) return;
+    fileInput.click();
+  });
+  
+  fileInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file || !currentDocIdForPhoto) return;
+    
+    if (!file.type.startsWith("image/")) {
+      showToast("Please select an image file", true);
+      fileInput.value = "";
+      return;
+    }
+    
+    // Compress large images
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const img = new Image();
+      img.onload = async () => {
+        // Compress if too large
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        const maxSize = 800;
+        if (width > maxSize || height > maxSize) {
+          if (width > height) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          } else {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.8);
+        await updatePhoto(currentDocIdForPhoto, compressedBase64);
+        closeModal();
+        fileInput.value = "";
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  
+  // Take photo option - show camera
+  takePhotoBtn.addEventListener("click", async () => {
+    if (!currentDocIdForPhoto) return;
+    initialOptions.style.display = "none";
+    cameraSection.style.display = "block";
+    try {
+      await startCamera();
+    } catch (err) {
+      initialOptions.style.display = "flex";
+      cameraSection.style.display = "none";
+    }
+  });
+  
+  // Capture button
+  captureBtn.addEventListener("click", async () => {
+    if (!currentDocIdForPhoto) return;
+    const photoData = capturePhoto();
+    if (photoData) {
+      await updatePhoto(currentDocIdForPhoto, photoData);
+      closeModal();
+    } else {
+      showToast("Failed to capture photo, try again", true);
+    }
+  });
+  
+  // Back button from camera
+  backToOptionsBtn.addEventListener("click", () => {
+    resetModal();
+    initialOptions.style.display = "flex";
+    cameraSection.style.display = "none";
+  });
+  
+  // Close modal when clicking outside
+  photoModal.addEventListener("click", (e) => {
+    if (e.target === photoModal) {
+      closeModal();
+    }
+  });
+  
+  // Open modal function (called when clicking photo)
+  function openPhotoModal(docId) {
+    currentDocIdForPhoto = docId;
+    resetModal();
+    photoModal.classList.add("active");
+  }
+  
+  // ========== INLINE EDITING ==========
+  function makeEditable(cell, fieldName, docId, currentValue) {
+    if (cell.querySelector('.edit-input')) return;
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = currentValue || '';
+    input.className = 'edit-input';
+    
+    const saveEdit = async () => {
+      const newValue = input.value.trim();
+      if (newValue === (currentValue || '')) {
+        cell.innerHTML = `<span class="editable-field" title="Click to edit">${escapeHtml(currentValue) || '—'}</span>`;
+        return;
+      }
+      
+      try {
+        const updateData = {};
+        if (fieldName === 'department') updateData.department = newValue;
+        else if (fieldName === 'year') updateData.year = newValue;
+        else if (fieldName === 'name') updateData.name = newValue;
+        else if (fieldName === 'roll') updateData.roll = newValue;
+        else if (fieldName === 'lecture') updateData.lecture = newValue;
+        
+        await updateDoc(doc(db, "attendance", docId), updateData);
+        cell.innerHTML = `<span class="editable-field" title="Click to edit">${escapeHtml(newValue) || '—'}</span>`;
+        showToast(`${fieldName} updated successfully`);
+      } catch (err) {
+        showToast("Update failed: " + err.message, true);
+        cell.innerHTML = `<span class="editable-field" title="Click to edit">${escapeHtml(currentValue) || '—'}</span>`;
       }
     };
-
-    // UPDATE PHOTO
-    const updateBtn = document.createElement("button");
-    updateBtn.innerText = "Update Photo";
-    updateBtn.classList.add("update-btn");
-
-    updateBtn.onclick = async () => {
-      currentDocId = id;
-      openCamera();
-    };
-
-    actionCell.appendChild(updateBtn);
-    actionCell.appendChild(delBtn);
-  });
-}
-
-// CAMERA OPEN
-async function openCamera(){
-  const video = document.getElementById("video");
-  video.style.display="block";
-
-  videoStream = await navigator.mediaDevices.getUserMedia({video:true});
-  video.srcObject = videoStream;
-
-  setTimeout(capturePhoto,2000); // auto capture after 2 sec
-}
-
-// CAPTURE + UPDATE
-async function capturePhoto(){
-  const video = document.getElementById("video");
-  const canvas = document.getElementById("canvas");
-
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(video,0,0);
-
-  const newPhoto = canvas.toDataURL("image/jpeg",0.6);
-
-  // STOP CAMERA
-  videoStream.getTracks().forEach(track=>track.stop());
-  video.style.display="none";
-
-  // UPDATE FIREBASE
-  await updateDoc(doc(db,"attendance",currentDocId),{
-    photo:newPhoto
-  });
-
-  alert("Photo Updated! Refresh page to see changes");
-}
-
-loadData();
-
+    
+    input.addEventListener('blur', saveEdit);
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') input.blur();
+    });
+    
+    cell.innerHTML = '';
+    cell.appendChild(input);
+    input.focus();
+  }
+  
+  function attachEditEvent(cell, fieldName, docId, currentValue) {
+    const span = document.createElement('span');
+    span.className = 'editable-field';
+    span.title = "Click to edit";
+    span.innerHTML = escapeHtml(currentValue) || '—';
+    span.addEventListener('click', (e) => {
+      e.stopPropagation();
+      makeEditable(cell, fieldName, docId, currentValue);
+    });
+    cell.innerHTML = '';
+    cell.appendChild(span);
+  }
+  
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+  
+  // ========== LOAD DATA ==========
+  async function loadData() {
+    try {
+      const snapshot = await getDocs(collection(db, "attendance"));
+      const records = [];
+      snapshot.forEach(docSnap => {
+        records.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      records.sort((a, b) => {
+        const dateA = a.date?.toMillis?.() || 0;
+        const dateB = b.date?.toMillis?.() || 0;
+        return dateB - dateA;
+      });
+      
+      countSpan.innerText = records.length;
+      
+      if (records.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 40px;"><i class="fas fa-folder-open"></i> No attendance records found</td></tr>`;
+        return;
+      }
+      
+      tableBody.innerHTML = "";
+      
+      for (const record of records) {
+        const row = document.createElement("tr");
+        row.setAttribute("data-docid", record.id);
+        
+        // Department
+        const deptCell = document.createElement("td");
+        attachEditEvent(deptCell, 'department', record.id, record.department);
+        row.appendChild(deptCell);
+        
+        // Year
+        const yearCell = document.createElement("td");
+        attachEditEvent(yearCell, 'year', record.id, record.year);
+        row.appendChild(yearCell);
+        
+        // Name
+        const nameCell = document.createElement("td");
+        attachEditEvent(nameCell, 'name', record.id, record.name);
+        row.appendChild(nameCell);
+        
+        // Roll
+        const rollCell = document.createElement("td");
+        attachEditEvent(rollCell, 'roll', record.id, record.roll);
+        row.appendChild(rollCell);
+        
+        // Lecture
+        const lectureCell = document.createElement("td");
+        attachEditEvent(lectureCell, 'lecture', record.id, record.lecture);
+        row.appendChild(lectureCell);
+        
+        // Photo
+        const photoCell = document.createElement("td");
+        const img = document.createElement("img");
+        img.src = record.photo || 'https://placehold.co/200x200?text=No+Photo';
+        img.className = "student-photo";
+        img.alt = "student";
+        img.onerror = () => { img.src = 'https://placehold.co/200x200?text=No+Photo'; };
+        img.addEventListener('click', () => openPhotoModal(record.id));
+        photoCell.appendChild(img);
+        row.appendChild(photoCell);
+        
+        // Date
+        const dateCell = document.createElement("td");
+        let formattedDate = '—';
+        if (record.date) {
+          try {
+            const dateObj = record.date.toDate ? record.date.toDate() : new Date(record.date);
+            formattedDate = dateObj.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+          } catch(e) { formattedDate = '—'; }
+        }
+        dateCell.innerText = formattedDate;
+        row.appendChild(dateCell);
+        
+        // Actions
+        const actionCell = document.createElement("td");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+        deleteBtn.className = "btn-icon btn-delete";
+        deleteBtn.addEventListener("click", async () => {
+          if (confirm(`Delete record of ${record.name || 'student'}?`)) {
+            try {
+              await deleteDoc(doc(db, "attendance", record.id));
+              row.remove();
+              const remaining = document.querySelectorAll("#tableBody tr:not(.empty-row)").length;
+              countSpan.innerText = remaining;
+              if (remaining === 0) loadData();
+              showToast(`Deleted ${record.name || 'record'}`);
+            } catch(err) {
+              showToast("Delete failed", true);
+            }
+          }
+        });
+        actionCell.appendChild(deleteBtn);
+        row.appendChild(actionCell);
+        
+        tableBody.appendChild(row);
+      }
+    } catch (err) {
+      console.error(err);
+      tableBody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">Error: ${err.message}</td></tr>`;
+      showToast("Failed to load data", true);
+    }
+  }
+  
+  // Initialize
+  await loadData();
 </script>
-
 </body>
 </html>
