@@ -1,0 +1,37 @@
+<html>
+<head><title>hello</title></head>
+<style>
+body{
+background:linear-gradient(red,blue);
+}
+.btn{
+height:45px;
+width:20%;
+font-size:25px;
+}
+.hakla{
+background-image:url(" https://tse1.explicit.bing.net/th/id/OIF.zJT5wvf5BSQIogLKBP1Ivw?rs=1&pid=ImgDetMain&o=7&rm=3");
+background-size:cover;
+background-repeat:no-repeat;
+
+}
+.abhi{
+height:250px;
+width:280px;
+background-color:"white";
+padding:10px;
+margin-top:20px;
+}
+</style>
+<body>
+<button class="btn">Click Me</button>
+<div class="abhi"></div>
+</body>
+<script>
+let btn=document.querySelector(".btn" );
+let abhi=document.querySelector(".abhi");
+btn.addEventListener("click",()=>{
+abhi.classList.toggle("hakla");
+});
+</script>
+</html>
