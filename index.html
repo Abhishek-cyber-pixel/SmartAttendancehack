@@ -53,6 +53,12 @@
       color: #4f46e5;
     }
 
+    .title-area p {
+      color: #475569;
+      font-size: 0.8rem;
+      margin-top: 6px;
+    }
+
     .stats-badge {
       background: white;
       padding: 0.6rem 1.4rem;
@@ -87,7 +93,7 @@
       border-collapse: separate;
       border-spacing: 0;
       font-size: 0.85rem;
-      min-width: 1100px;
+      min-width: 1200px;
     }
 
     .data-table th {
@@ -128,6 +134,60 @@
       transform: scale(1.05);
     }
 
+    .photo-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .photo-actions-overlay {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .photo-container:hover .photo-actions-overlay {
+      opacity: 1;
+    }
+
+    .photo-icon-btn {
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: all 0.2s;
+    }
+
+    .photo-icon-btn.delete-photo {
+      background: #ef4444;
+      color: white;
+    }
+
+    .photo-icon-btn.delete-photo:hover {
+      background: #dc2626;
+      transform: scale(1.1);
+    }
+
+    .photo-icon-btn.edit-photo {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .photo-icon-btn.edit-photo:hover {
+      background: #4338ca;
+      transform: scale(1.1);
+    }
+
     .editable-field {
       background: transparent;
       border: 1px dashed #cbd5e1;
@@ -163,25 +223,25 @@
 
     .btn-icon {
       border: none;
-      padding: 0.45rem 0.9rem;
+      padding: 0.5rem 1rem;
       border-radius: 40px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-family: 'Inter', sans-serif;
     }
 
-    .btn-delete {
+    .btn-delete-record {
       background: #fff1f0;
       color: #dc2626;
       border: 1px solid #fecaca;
     }
 
-    .btn-delete:hover {
+    .btn-delete-record:hover {
       background: #dc2626;
       color: white;
       transform: translateY(-2px);
@@ -283,6 +343,17 @@
       transform: translateY(-2px);
     }
 
+    .photo-option-btn.delete-photo-option {
+      background: #ef4444;
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .photo-option-btn.delete-photo-option:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+    }
+
     .camera-preview-area {
       margin-top: 1rem;
     }
@@ -338,24 +409,22 @@
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
     }
 
-    .badge-dept, .year-badge {
-      background: #e0e7ff;
-      padding: 4px 10px;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 0.7rem;
-      display: inline-block;
-    }
-
-    .year-badge {
-      background: #d9f99d;
-      color: #3f6212;
-    }
-
     .loading-spinner {
       text-align: center;
       padding: 40px;
       color: #64748b;
+    }
+
+    .default-placeholder {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #cbd5e1, #e2e8f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 24px;
     }
   </style>
 </head>
@@ -365,9 +434,10 @@
   <div class="hero-section">
     <div class="title-area">
       <h1><i class="fas fa-crown"></i> Smart Attendance · Pro Admin</h1>
-      <p style="color:#475569; font-size:0.8rem; margin-top: 6px;">
-        <i class="fas fa-pen-alt"></i> Click any text field to edit • 
-        <i class="fas fa-image"></i> Click photo to update (Upload file OR Capture)
+      <p>
+        <i class="fas fa-pen-alt"></i> Click text to edit • 
+        <i class="fas fa-image"></i> Hover over photo to edit/delete • 
+        <i class="fas fa-trash"></i> Delete record button
       </p>
     </div>
     <div class="stats-badge">
@@ -401,7 +471,7 @@
 <div id="photoModal" class="photo-modal">
   <div class="photo-card">
     <h3><i class="fas fa-camera"></i> Update Student Photo</h3>
-    <p style="color:#64748b; font-size:14px; margin-bottom: 10px;">Choose how you want to update the photo</p>
+    <p style="color:#64748b; font-size:14px; margin-bottom: 10px;">Choose an option</p>
     
     <div id="initialOptions" class="photo-options">
       <button id="uploadFileBtn" class="photo-option-btn upload">
@@ -409,6 +479,9 @@
       </button>
       <button id="takePhotoBtn" class="photo-option-btn camera">
         <i class="fas fa-camera-retro"></i> Take a Photo
+      </button>
+      <button id="deletePhotoBtn" class="photo-option-btn delete-photo-option">
+        <i class="fas fa-trash-alt"></i> Delete Photo
       </button>
     </div>
     
@@ -460,6 +533,7 @@
   const cameraSection = document.getElementById("cameraSection");
   const uploadFileBtn = document.getElementById("uploadFileBtn");
   const takePhotoBtn = document.getElementById("takePhotoBtn");
+  const deletePhotoBtn = document.getElementById("deletePhotoBtn");
   const backToOptionsBtn = document.getElementById("backToOptionsBtn");
   const captureBtn = document.getElementById("captureBtn");
   const fileInput = document.getElementById("fileInput");
@@ -468,6 +542,10 @@
   
   let currentDocIdForPhoto = null;
   let currentStream = null;
+  let currentRowForPhoto = null;
+
+  // Default placeholder image (no photo)
+  const DEFAULT_PHOTO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='2' width='20' height='20' rx='2.18' ry='2.18'%3E%3C/rect%3E%3Cpath d='M8 2v20M16 2v20M2 8h20M2 16h20'%3E%3C/path%3E%3C/svg%3E";
 
   // Toast function
   function showToast(message, isError = false) {
@@ -500,11 +578,12 @@
     photoModal.classList.remove("active");
     resetModal();
     currentDocIdForPhoto = null;
+    currentRowForPhoto = null;
   }
 
   // Update photo in Firebase
   async function updatePhoto(docId, photoBase64) {
-    if (!docId || !photoBase64) return false;
+    if (!docId) return false;
     try {
       await updateDoc(doc(db, "attendance", docId), { photo: photoBase64 });
       
@@ -514,12 +593,7 @@
         if (row.getAttribute("data-docid") === docId) {
           const photoCell = row.cells[5];
           if (photoCell) {
-            const img = photoCell.querySelector("img");
-            if (img) {
-              img.src = photoBase64;
-            } else {
-              photoCell.innerHTML = `<img src="${photoBase64}" class="student-photo" alt="student">`;
-            }
+            updatePhotoCell(photoCell, photoBase64, docId);
           }
           break;
         }
@@ -530,6 +604,74 @@
       showToast("❌ Update failed: " + err.message, true);
       return false;
     }
+  }
+
+  // Delete photo (set to default)
+  async function deletePhoto(docId) {
+    if (!docId) return false;
+    try {
+      await updateDoc(doc(db, "attendance", docId), { photo: "" });
+      
+      // Update the photo in table immediately
+      const rows = document.querySelectorAll("#tableBody tr");
+      for (let row of rows) {
+        if (row.getAttribute("data-docid") === docId) {
+          const photoCell = row.cells[5];
+          if (photoCell) {
+            updatePhotoCell(photoCell, "", docId);
+          }
+          break;
+        }
+      }
+      showToast("🗑️ Photo deleted successfully!");
+      return true;
+    } catch (err) {
+      showToast("❌ Delete failed: " + err.message, true);
+      return false;
+    }
+  }
+
+  // Update photo cell with edit/delete buttons
+  function updatePhotoCell(cell, photoUrl, docId) {
+    const container = document.createElement("div");
+    container.className = "photo-container";
+    
+    const img = document.createElement("img");
+    img.src = photoUrl && photoUrl.trim() !== "" ? photoUrl : "https://placehold.co/200x200?text=No+Photo";
+    img.className = "student-photo";
+    img.alt = "student";
+    img.onerror = () => { img.src = "https://placehold.co/200x200?text=No+Photo"; };
+    
+    const actionsOverlay = document.createElement("div");
+    actionsOverlay.className = "photo-actions-overlay";
+    
+    const editBtn = document.createElement("button");
+    editBtn.className = "photo-icon-btn edit-photo";
+    editBtn.innerHTML = '<i class="fas fa-camera"></i>';
+    editBtn.title = "Edit Photo";
+    editBtn.onclick = (e) => {
+      e.stopPropagation();
+      openPhotoModal(docId);
+    };
+    
+    const deletePhotoBtnSmall = document.createElement("button");
+    deletePhotoBtnSmall.className = "photo-icon-btn delete-photo";
+    deletePhotoBtnSmall.innerHTML = '<i class="fas fa-trash"></i>';
+    deletePhotoBtnSmall.title = "Delete Photo";
+    deletePhotoBtnSmall.onclick = async (e) => {
+      e.stopPropagation();
+      if (confirm("Are you sure you want to remove this photo?")) {
+        await deletePhoto(docId);
+      }
+    };
+    
+    actionsOverlay.appendChild(editBtn);
+    actionsOverlay.appendChild(deletePhotoBtnSmall);
+    container.appendChild(img);
+    container.appendChild(actionsOverlay);
+    
+    cell.innerHTML = "";
+    cell.appendChild(container);
   }
 
   // Open camera and start stream
@@ -582,12 +724,10 @@
       return;
     }
     
-    // Compress large images
     const reader = new FileReader();
     reader.onload = async (event) => {
       const img = new Image();
       img.onload = async () => {
-        // Compress if too large
         const canvas = document.createElement("canvas");
         let width = img.width;
         let height = img.height;
@@ -613,6 +753,15 @@
       img.src = event.target.result;
     };
     reader.readAsDataURL(file);
+  });
+  
+  // Delete photo option
+  deletePhotoBtn.addEventListener("click", async () => {
+    if (!currentDocIdForPhoto) return;
+    if (confirm("Remove this student's photo?")) {
+      await deletePhoto(currentDocIdForPhoto);
+      closeModal();
+    }
   });
   
   // Take photo option - show camera
@@ -654,7 +803,7 @@
     }
   });
   
-  // Open modal function (called when clicking photo)
+  // Open modal function
   function openPhotoModal(docId) {
     currentDocIdForPhoto = docId;
     resetModal();
@@ -779,15 +928,9 @@
         attachEditEvent(lectureCell, 'lecture', record.id, record.lecture);
         row.appendChild(lectureCell);
         
-        // Photo
+        // Photo with edit/delete overlay
         const photoCell = document.createElement("td");
-        const img = document.createElement("img");
-        img.src = record.photo || 'https://placehold.co/200x200?text=No+Photo';
-        img.className = "student-photo";
-        img.alt = "student";
-        img.onerror = () => { img.src = 'https://placehold.co/200x200?text=No+Photo'; };
-        img.addEventListener('click', () => openPhotoModal(record.id));
-        photoCell.appendChild(img);
+        updatePhotoCell(photoCell, record.photo, record.id);
         row.appendChild(photoCell);
         
         // Date
@@ -802,26 +945,26 @@
         dateCell.innerText = formattedDate;
         row.appendChild(dateCell);
         
-        // Actions
+        // Actions - Delete whole record
         const actionCell = document.createElement("td");
-        const deleteBtn = document.createElement("button");
-        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
-        deleteBtn.className = "btn-icon btn-delete";
-        deleteBtn.addEventListener("click", async () => {
-          if (confirm(`Delete record of ${record.name || 'student'}?`)) {
+        const deleteRecordBtn = document.createElement("button");
+        deleteRecordBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete Record';
+        deleteRecordBtn.className = "btn-icon btn-delete-record";
+        deleteRecordBtn.addEventListener("click", async () => {
+          if (confirm(`⚠️ Permanently delete entire record of ${record.name || 'student'}?\nThis action cannot be undone!`)) {
             try {
               await deleteDoc(doc(db, "attendance", record.id));
               row.remove();
-              const remaining = document.querySelectorAll("#tableBody tr:not(.empty-row)").length;
+              const remaining = document.querySelectorAll("#tableBody tr").length;
               countSpan.innerText = remaining;
               if (remaining === 0) loadData();
-              showToast(`Deleted ${record.name || 'record'}`);
+              showToast(`🗑️ Deleted record of ${record.name || 'student'}`);
             } catch(err) {
-              showToast("Delete failed", true);
+              showToast("Delete failed: " + err.message, true);
             }
           }
         });
-        actionCell.appendChild(deleteBtn);
+        actionCell.appendChild(deleteRecordBtn);
         row.appendChild(actionCell);
         
         tableBody.appendChild(row);
